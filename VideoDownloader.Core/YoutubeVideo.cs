@@ -88,10 +88,6 @@ namespace VideoDownloader.Core
         }
         #endregion
 
-
-        /// <summary>
-        /// Contains information about the video url extension and dimension
-        /// </summary>
         public class VideoQuality
         {
             public Extentisons Extention { get; set; }
