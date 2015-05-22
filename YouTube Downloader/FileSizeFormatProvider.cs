@@ -6,18 +6,17 @@ namespace YouTube_Downloader
     {
         public object GetFormat(Type formatType)
         {
-            if (formatType == typeof(ICustomFormatter)) return this;
-            return null;
+            return formatType == typeof(ICustomFormatter) ? this : null;
         }
 
-        private const string FileSizeFormat = "fs",SpeedFormat="s";
+        private const string FileSizeFormat = "fs", SpeedFormat = "s";
         private const Decimal OneKiloByte = 1024M;
         private const Decimal OneMegaByte = OneKiloByte * 1024M;
         private const Decimal OneGigaByte = OneMegaByte * 1024M;
 
         public string Format(string format, object arg, IFormatProvider formatProvider)
         {
-            if (format == null || (!format.StartsWith(FileSizeFormat)&&!format.StartsWith(SpeedFormat)))
+            if (format == null || ( !format.StartsWith(FileSizeFormat) && !format.StartsWith(SpeedFormat)))
             {
                 return defaultFormat(format, arg, formatProvider);
             }

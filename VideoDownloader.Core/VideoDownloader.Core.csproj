@@ -41,11 +41,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DownloadableVideo.cs" />
+    <Compile Include="DownloadStatus.cs" />
     <Compile Include="FileSizeFormatProvider.cs" />
+    <Compile Include="IDownloadable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TagInfo.cs" />
     <Compile Include="Dimension.cs" />
     <Compile Include="Extentisons.cs" />
+    <Compile Include="VideoDownloaderBaseException.cs" />
+    <Compile Include="VideoQuality.cs" />
     <Compile Include="YoutubeVideo.cs" />
   </ItemGroup>
   <ItemGroup>

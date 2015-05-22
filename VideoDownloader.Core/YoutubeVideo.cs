@@ -4,20 +4,25 @@ using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Net.Configuration;
+using System.Text;
 using System.Web;
 using Leon.Framework.Utilities;
 
 namespace VideoDownloader.Core
 {
-    public class YoutubeVideo
+    public class YoutubeVideo : IDownloadable
     {
         public string URL { get; private set; }
+
         public string Id { get; private set; }
-        public ICollection<VideoQuality> Qualities { get; private set; }
+
+        public ICollection<VideoQuality> AvaliableQualities { get; private set; }
+
+        public VideoQuality SelectedQuality { get; set; }
 
         public string Title { get; private set; }
 
-        public long Length { get; private set; }
+        public TimeSpan Length { get; private set; }
 
         public string ThumbnailUrl
         {
@@ -35,9 +40,9 @@ namespace VideoDownloader.Core
             var raw = GetYouTubeVideoRawInfo();
             var infoValues = HttpUtility.ParseQueryString(raw);
             Title = infoValues["title"];
-            Length = long.Parse(infoValues["length_seconds"]);
+            Length = new TimeSpan(long.Parse(infoValues["length_seconds"]) * TimeSpan.TicksPerSecond);
             var videos = infoValues["url_encoded_fmt_stream_map"].Split(',');
-            Qualities = new List<VideoQuality>();
+            AvaliableQualities = new List<VideoQuality>();
             foreach (var video in videos)
             {
                 var data = HttpUtility.ParseQueryString(video);
@@ -46,7 +51,7 @@ namespace VideoDownloader.Core
                 var downloadUrl = Uri.UnescapeDataString(data["url"]) + "&fallback_host=" + server;
                 if (!string.IsNullOrEmpty(signature))
                     url += "&signature=" + signature;
-                Qualities.Add(new VideoQuality()
+                AvaliableQualities.Add(new VideoQuality()
                 {
                     DownloadUrl = downloadUrl,
                     FileSize = GetVideoSize(downloadUrl),
@@ -55,6 +60,15 @@ namespace VideoDownloader.Core
 
                 });
             }
+        }
+
+        public void DownloadTo(string path)
+        {
+            if (SelectedQuality == null)
+            {
+                throw new VideoDownloaderBaseException("Video Selected Quality Not Set.");
+            }
+            SelectedQuality.DownloadTo(path);
         }
 
         #region helper method
@@ -88,19 +102,17 @@ namespace VideoDownloader.Core
         }
         #endregion
 
-        public class VideoQuality
+        public override string ToString()
         {
-            public Extentisons Extention { get; set; }
-            public Dimension Dimension { get; set; }
-            public string DownloadUrl { get; set; }
-            public long FileSize { get; set; }
-
-            public override string ToString()
-            { 
-                var videoSize = String.Format(new FileSizeFormatProvider(), "{0:fs}", FileSize);
-                return String.Format("{0} ({1}) - {2}", Extention, Dimension, videoSize);
+            var result = new StringBuilder();
+            result.AppendFormat("Title : {0} \r\nLength : {1} \r\nThumbnailUrl : {2}\r\nQulities:\r\n", Title, Length, ThumbnailUrl);
+            foreach (var videoQuality in AvaliableQualities)
+            {
+                result.AppendLine("\t" + videoQuality);
             }
-
+            return result.ToString();
         }
+
+
     }
 }
