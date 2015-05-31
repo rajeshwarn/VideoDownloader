@@ -10,7 +10,7 @@ using Leon.Framework.Utilities;
 
 namespace VideoDownloader.Core
 {
-    public class YoutubeVideo : IDownloadable
+    public class YoutubeVideo
     {
         public string URL { get; private set; }
 
@@ -62,15 +62,6 @@ namespace VideoDownloader.Core
             }
         }
 
-        public void DownloadTo(string path)
-        {
-            if (SelectedQuality == null)
-            {
-                throw new VideoDownloaderBaseException("Video Selected Quality Not Set.");
-            }
-            SelectedQuality.DownloadTo(path);
-        }
-
         #region helper method
         private string GetYouTubeVideoRawInfo()
         {
@@ -84,7 +75,7 @@ namespace VideoDownloader.Core
         private static long GetVideoSize(string downloadUrl)
         {
             var fileInfoRequest = WebRequest.Create(downloadUrl);
-            fileInfoRequest.Proxy = Utilities.GetProxy();
+            fileInfoRequest.Proxy = Utilities.GetProxyWithCredentials();
             var fileInfoResponse = fileInfoRequest.GetResponse();
             var bytesLength = fileInfoResponse.ContentLength;
             fileInfoRequest.Abort();

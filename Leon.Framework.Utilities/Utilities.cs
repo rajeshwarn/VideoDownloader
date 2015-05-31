@@ -12,7 +12,7 @@ namespace Leon.Framework.Utilities
             return regex.IsMatch(url);
         }
 
-        public static IWebProxy GetProxy()
+        public static IWebProxy GetProxyWithCredentials()
         {
             var proxy = WebRequest.GetSystemWebProxy();
             proxy.Credentials = CredentialCache.DefaultCredentials;

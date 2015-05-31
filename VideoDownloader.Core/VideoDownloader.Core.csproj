@@ -42,9 +42,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DownloadableVideo.cs" />
+    <Compile Include="DownloadHandler.cs" />
     <Compile Include="DownloadStatus.cs" />
     <Compile Include="FileSizeFormatProvider.cs" />
     <Compile Include="IDownloadable.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Dimension.cs" />
     <Compile Include="Extentisons.cs" />
